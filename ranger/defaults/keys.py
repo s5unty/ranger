@@ -200,6 +200,9 @@ map('zc', fm.toggle_boolean_option('collapse_preview'))
 map('zs', fm.toggle_boolean_option('sort_case_insensitive'))
 map('zm', fm.toggle_boolean_option('mouse_enabled'))
 map('zf', fm.open_console('filter '))
+map('z1', fm.execute_console('set perspective="long"'))
+map('z2', fm.execute_console('set perspective="dual"'))
+map('z3', fm.execute_console('set perspective="miller"'))
 
 # ------------------------------------------------------------ sort
 map('o<bg>', 'O<bg>', fm.hint("*s*ize *b*ase*n*ame *m*time" \

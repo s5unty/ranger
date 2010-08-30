@@ -21,6 +21,15 @@ from .browsercolumn import BrowserColumn
 from .pager import Pager
 from ..displayable import DisplayableContainer
 
+# Perspective    | Identifier | Description
+# ---------------+------------+---------------------------------------
+# Miller Columns | "miller"   | Several rows with preview and backview
+# Dual Pane      | "dual"     | Two columns next to each other
+# Long Listing   | "long"     | One column with extended information
+
+# The first is also the default.
+ALLOWED_PERSPECTIVES = "miller", "dual", "long"
+
 class BrowserView(Widget, DisplayableContainer):
 	ratios = None
 	preview = True
@@ -28,17 +37,13 @@ class BrowserView(Widget, DisplayableContainer):
 	draw_bookmarks = False
 	stretch_ratios = None
 	need_clear = False
+	pager = None
+	columns = []
 
-	def __init__(self, win, ratios, preview = True):
+	def __init__(self, win, ratios, preview=True):
 		DisplayableContainer.__init__(self, win)
 		self.preview = preview
-		self.columns = []
-
-		self.pager = Pager(self.win, embedded=True)
-		self.pager.visible = False
-		self.add_child(self.pager)
-
-		self.change_ratios(ratios, resize=False)
+		self.create_perspective(self.settings.perspective)
 
 		for option in ('preview_directories', 'preview_files'):
 			self.settings.signal_bind('setopt.' + option,
@@ -46,16 +51,61 @@ class BrowserView(Widget, DisplayableContainer):
 
 		self.fm.env.signal_bind('move', self.request_clear)
 		self.settings.signal_bind('setopt.column_ratios', self.request_clear)
+		self.settings.signal_bind('setopt.perspective',
+				self.change_perspective, priority=0.1)
 
-	def change_ratios(self, ratios, resize=True):
-		if isinstance(ratios, Signal):
-			ratios = ratios.value
+	def change_perspective(self, signal):
+		if signal.previous != signal.value:
+			if signal.value in ALLOWED_PERSPECTIVES:
+				self.destroy_perspective()
+				self.create_perspective(signal.value)
+			else:
+				raise Exception("No such perspective: " + str(signal.value))
 
-		for column in self.columns:
-			column.destroy()
-			self.remove_child(column)
+	def destroy_perspective(self):
+		if self.columns:
+			for column in self.columns:
+				column.destroy()
+				self.remove_child(column)
 		self.columns = []
+		self.main_column = None
+		if self.pager:
+			self.pager.destroy()
+		self.pager = None
 
+	def create_perspective(self, which, **keywords):
+		if which not in ALLOWED_PERSPECTIVES:
+			which = ALLOWED_PERSPECTIVES[0]
+		if which == 'miller':
+			self._create_perspective_miller()
+		if which == 'dual':
+			self._create_perspective_dual()
+		if which == 'long':
+			self._create_perspective_long()
+
+	def _create_perspective_dual(self):
+		column = BrowserColumn(self.win, 0)
+		self.main_column = column
+		self.add_child(column)
+		self.columns.append(column)
+		column = BrowserColumn(self.win, 0)
+		self.add_child(column)
+		self.columns.append(column)
+		self.resize(self.y, self.x, self.hei, self.wid)
+
+	def _create_perspective_long(self):
+		column = BrowserColumn(self.win, 0)
+		self.main_column = column
+		self.add_child(column)
+		self.columns = [column]
+		self.resize(self.y, self.x, self.hei, self.wid)
+
+	def _create_perspective_miller(self):
+		self.pager = Pager(self.win, embedded=True)
+		self.pager.visible = False
+		self.add_child(self.pager)
+
+		ratios = self.settings.column_ratios
 		ratio_sum = float(sum(ratios))
 		self.ratios = tuple(x / ratio_sum for x in ratios)
 
@@ -67,6 +117,7 @@ class BrowserView(Widget, DisplayableContainer):
 		offset = 1 - len(ratios)
 		if self.preview: offset += 1
 
+		self.columns = []
 		for level in range(len(ratios)):
 			fl = BrowserColumn(self.win, level + offset)
 			self.add_child(fl)
@@ -81,6 +132,14 @@ class BrowserView(Widget, DisplayableContainer):
 			self.main_column.main_column = True
 
 		self.resize(self.y, self.x, self.hei, self.wid)
+
+	def change_ratios(self, ratios, resize=True):
+		if isinstance(ratios, Signal):
+			ratios = ratios.value
+
+		if self.settings.perspective == 'miller':
+			self.destroy_perspective()
+			self.create_perspective('miller')
 
 	def _request_clear_if_has_borders(self):
 		if self.settings.draw_borders:
@@ -102,7 +161,7 @@ class BrowserView(Widget, DisplayableContainer):
 				self._draw_borders()
 
 	def finalize(self):
-		if self.pager.visible:
+		if self.pager and self.pager.visible:
 			try:
 				self.fm.ui.win.move(self.main_column.y, self.main_column.x)
 			except:
@@ -158,7 +217,7 @@ class BrowserView(Widget, DisplayableContainer):
 				left_start = child.x + child.wid
 			else:
 				break
-		if not self.pager.visible:
+		if not self.pager or not self.pager.visible:
 			for child in reversed(self.columns):
 				if not child.has_preview():
 					right_end = child.x - 1
@@ -175,7 +234,7 @@ class BrowserView(Widget, DisplayableContainer):
 		for child in self.columns:
 			if not child.has_preview():
 				continue
-			if child.main_column and self.pager.visible:
+			if child.main_column and self.pager and self.pager.visible:
 				win.vline(1, right_end, curses.ACS_VLINE, self.hei - 2)
 				break
 			x = child.x + child.wid
@@ -195,12 +254,33 @@ class BrowserView(Widget, DisplayableContainer):
 
 	def _collapse(self):
 		# Should the last column be cut off? (Because there is no preview)
-		return self.settings.collapse_preview and self.preview and \
-			not self.columns[-1].has_preview() and self.stretch_ratios
+		return self.settings.collapse_preview and self.preview \
+			and self.columns and not self.columns[-1].has_preview() \
+			and self.stretch_ratios
 
 	def resize(self, y, x, hei, wid):
-		"""Resize all the columns according to the given ratio"""
 		DisplayableContainer.resize(self, y, x, hei, wid)
+		which = self.settings.perspective
+		if which not in ALLOWED_PERSPECTIVES:
+			which = ALLOWED_PERSPECTIVES[0]
+		if which == 'miller':
+			self._resize_miller(y, x, hei, wid)
+		if which == 'long':
+			self._resize_long(y, x, hei, wid)
+		if which == 'dual':
+			self._resize_dual(y, x, hei, wid)
+
+	def _resize_dual(self, y, x, hei, wid):
+		halfwid = int(self.wid / 2) - 1
+		self.columns[0].resize(0, 0, self.hei, halfwid)
+#		self.columns[1].resize(y, x + halfwid + 1, hei, halfwid)
+		self.columns[1].resize(0, 0 + halfwid + 1, self.hei, halfwid)
+
+	def _resize_long(self, y, x, hei, wid):
+		self.columns[0].resize(0, 0, self.hei, self.wid)
+
+	def _resize_miller(self, y, x, hei, wid):
+		"""Resize all the columns according to the given ratio"""
 		borders = self.settings.draw_borders
 		pad = 1 if borders else 0
 		left = pad

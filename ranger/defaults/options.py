@@ -47,6 +47,9 @@ show_hidden_bookmarks = True
 # Snow is monochrome, texas and default88 use 88 colors.
 colorscheme = 'default'
 
+# Which perspective?  Should be one of "miller", "dual" or "long"
+perspective = 'miller'
+
 # Preview files on the rightmost column?
 # And collapse (shrink) the last column if there is nothing to preview?
 preview_files = True
