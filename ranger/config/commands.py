@@ -344,6 +344,8 @@ class set_(Command):
             return (self.firstpart + setting for setting in settings \
                     if setting.startswith(name))
         if not value:
+            if name == "colorscheme":
+                return self.firstpart + settings[name].__module__.rsplit(".", 1)[1]
             return self.firstpart + str(settings[name])
         if bool in settings.types_of(name):
             if 'true'.startswith(value.lower()):
