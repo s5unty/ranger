@@ -1,0 +1,23 @@
+#!/usr/bin/make -f
+
+# Unset the environment variables set by dpkg-buildpackage. (This is
+# necessary because distutils is brittle with compiler/linker flags
+# set. Specifically, packages using f2py will break without this.)
+unexport CPPFLAGS
+unexport CFLAGS
+unexport CXXFLAGS
+unexport FFLAGS
+unexport LDFLAGS
+
+%:
+	dh $@ --with python2
+
+override_dh_auto_install:
+	python setup.py install --root=debian/ranger --install-layout=deb
+	# avoid extra-license-file
+	rm debian/ranger/usr/share/doc/ranger/CHANGELOG
+	# tell lintian to not complain
+	find debian/ranger -regex ".*/data/scope.sh" -exec chmod u+x {} \;
+
+override_dh_auto_build:
+

@@ -1,0 +1,98 @@
+ranger (1.7.1-1) unstable; urgency=low
+
+  * New upstream release.
+  * Updated Standard-version to 3.9.6.
+  * Add more upstream authors.
+  * Bashism in rifle_sxiv.sh, fixed. (Closes: #772351)
+    Thanks: Raphael Geissert <atomo64@gmail.com>
+  * Upstream documents are updated.
+    (R) HACKING -> HACKING.md
+    (R) README -> README.md
+    (A) AUTHORS
+
+ -- Vern Sun <s5unty@gmail.com>  Tue, 16 Jun 2015 10:06:37 +0800
+
+ranger (1.6.1-1) unstable; urgency=low
+
+  * New upstream release. (Closes: #734300)
+    Thanks: James Dietrich <jdietrch@fastmail.fm>
+            Mateusz Łukasik <mati75@linuxmint.pl>
+  * Typo in a command name, fixed. (Closes: #711510)
+    Thanks: niku <vaibhav.niku@gmail.com>
+  * Updated Standard-version to 3.9.5.
+  * Upgrade compat magic number to 9.
+  * Add upstream documents.
+    - doc/HACKING
+    - doc/colorschemes.txt
+
+ -- Vern Sun <s5unty@gmail.com>  Sun, 23 Feb 2014 11:59:24 +0800
+
+ranger (1.6.0-1) unstable; urgency=low
+
+  * New upstream release.
+  * Updated Standard-version to 3.9.4.
+  * Updated Build-Depends.
+  * Removed `Provides: ${python:Provides}'
+  * Better Suggests:
+    - 'elinks-lint' => 'w3m | lynx | elinks | elinks-lite'
+  * New Recommends:
+    - 'file' for determining file types
+    - The 'python-chardet', in case of encoding detection problems
+    - 'sudo' to use the "run as root"-feature
+    - 'w3m-img' for previewing images in "true color".
+  * Moving the modules to a private directory.
+    - debian/patches/00-private-search-path.diff
+  * Relocate configuration files and create symbolic links.
+    - debian/patches/01-installation-location.diff
+      - config/rc.conf
+      - config/rifle.conf
+      - data/scope.sh
+      - data/mime.types
+  * Make sensible decisions on which pager and editor.
+    - debian/patches/02-default-pager-and-editor.diff
+  * Ranger doesn't honour TMPDIR, fixed.
+    - debian/patches/03-make-tmpdir-clear.diff
+  * lintian4python emits `Pyflakes-undefined-name`, fixed.
+    - debian/patches/04-undefined-errno.diff
+
+ -- Vern Sun <s5unty@gmail.com>  Wed, 27 Mar 2013 01:20:45 +0800
+
+ranger (1.5.4-1) unstable; urgency=low
+
+  * New upstream release.
+  * Remove Depends on 'less'. (Closes: #672144)
+
+ -- Vern Sun <s5unty@gmail.com>  Sat, 19 May 2012 20:56:15 +0800
+
+ranger (1.5.3-1) unstable; urgency=low
+
+  * New upstream release.
+
+ -- Vern Sun <s5unty@gmail.com>  Sat, 24 Mar 2012 10:14:32 +0800
+
+ranger (1.5.2-1) unstable; urgency=low
+
+  * New upstream release.
+  * Python tested with version 2.6, 2.7, 3.1, 3.2 (Closes: #643782)
+  * There are no Recommends and Suggests, fixed. (Closes: #619748)
+  * Updated download url in debian/copyright.
+  * Updated Standard-version to 3.9.2.
+  * Updated lintian overrides about script-not-executable.
+  * Rewrite debian/rules instead of patching the Makefile.
+  * The installation location is not compliant with Debian policy, fixed.
+
+ -- Vern Sun <s5unty@gmail.com>  Fri, 18 Nov 2011 21:09:24 +0800
+
+ranger (1.4.3-1) unstable; urgency=low
+
+  * New upstream release
+  * "python" lowercase in short description, fixed. (Closes: #617880)
+  * Two typos in the man page (patch from A. Costa), fixed. (Closes: #619142)
+
+ -- Vern Sun <s5unty@gmail.com>  Wed, 06 Apr 2011 09:03:36 +0800
+
+ranger (1.4.1-1) unstable; urgency=low
+
+  * Initial release (Closes: #609449).
+
+ -- Vern Sun <s5unty@gmail.com>  Sun, 09 Jan 2011 22:14:31 +0800

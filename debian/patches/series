@@ -1,0 +1,4 @@
+0001-comply-with-the-Debian-policy-10.7.2.patch
+0002-make-sensible-decisions-on-which-pager-and-editor.patch
+0003-honour-TMPDIR-environment-variable.patch
+0004-closes-772351-thanks-Raphael-Geissert.patch

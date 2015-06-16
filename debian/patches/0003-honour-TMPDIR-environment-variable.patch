@@ -1,0 +1,53 @@
+From: Vern Sun <s5unty@gmail.com>
+Date: Tue, 16 Jun 2015 10:51:54 +0800
+Subject: honour TMPDIR environment variable
+
+---
+ ranger/__init__.py  | 3 ++-
+ ranger/core/main.py | 5 +++--
+ 2 files changed, 5 insertions(+), 3 deletions(-)
+
+diff --git a/ranger/__init__.py b/ranger/__init__.py
+index 935c54b..89f9557 100644
+--- a/ranger/__init__.py
++++ b/ranger/__init__.py
+@@ -10,6 +10,7 @@ program you want to use to open your files with.
+ 
+ import sys
+ import os
++import tempfile
+ 
+ # Information
+ __license__ = 'GPL3'
+@@ -24,7 +25,7 @@ TIME_BEFORE_FILE_BECOMES_GARBAGE = 1200
+ MAX_RESTORABLE_TABS = 3
+ MACRO_DELIMITER = '%'
+ DEFAULT_PAGER = 'sensible-pager'
+-LOGFILE = '/tmp/ranger_errorlog'
++LOGFILE = tempfile.gettempdir()+'/ranger_errorlog'
+ CACHEDIR = os.path.expanduser("~/.cache/ranger")
+ USAGE = '%prog [options] [path]'
+ VERSION = 'ranger-stable %s\n\nPython %s' % (__version__, sys.version)
+diff --git a/ranger/core/main.py b/ranger/core/main.py
+index 524a9a1..55102dc 100644
+--- a/ranger/core/main.py
++++ b/ranger/core/main.py
+@@ -5,6 +5,7 @@
+ 
+ import os.path
+ import sys
++import tempfile
+ 
+ def main():
+     """initialize objects and run the filemanager"""
+@@ -133,8 +134,8 @@ def main():
+             import pstats
+             profile = None
+             ranger.__fm = fm
+-            cProfile.run('ranger.__fm.loop()', '/tmp/ranger_profile')
+-            profile = pstats.Stats('/tmp/ranger_profile', stream=sys.stderr)
++            cProfile.run('ranger.__fm.loop()', tempfile.gettempdir()+'/ranger_profile')
++            profile = pstats.Stats(tempfile.gettempdir()+'/ranger_profile', stream=sys.stderr)
+         else:
+             fm.loop()
+     except Exception:

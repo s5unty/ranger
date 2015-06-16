@@ -1,0 +1,26 @@
+Source: ranger
+Section: utils
+Priority: extra
+Maintainer: Vern Sun <s5unty@gmail.com>
+Build-Depends: debhelper (>= 9), dh-python (>= 1), python (>= 2.6.8-1~), ncurses-bin (>= 5.7+20100313-5)
+X-Python-Version: >= 2.6
+Standards-Version: 3.9.6
+Homepage: http://ranger.nongnu.org/
+
+Package: ranger
+Architecture: all
+Depends: ${misc:Depends}, ${python:Depends}
+Recommends: file, python-chardet, sudo, w3m-img
+Suggests: atool, caca-utils, elinks | elinks-lite | lynx | w3m, highlight, less, poppler-utils
+Description: File manager with an ncurses frontend written in Python
+ Ranger is a free console file manager that gives you greater flexibility and a
+ good overview of your files without having to leave your *nix console. It
+ visualizes the directory tree in two dimensions: the directory hierarchy on
+ one, lists of files on the other, with a preview to the right so you know
+ where you'll be going.
+ .
+ The default keys are similar to those of Vim, Emacs and Midnight Commander,
+ though Ranger is easily controllable with just the arrow keys or the mouse.
+ .
+ The program is written in Python and uses curses for the text-based user
+ interface.

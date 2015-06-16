@@ -1,0 +1,37 @@
+From: Vern Sun <s5unty@gmail.com>
+Date: Thu, 6 Mar 2014 14:13:36 +0800
+Subject: make sensible decisions on which pager and editor
+
+---
+ ranger/__init__.py  | 2 +-
+ ranger/ext/rifle.py | 4 ++--
+ 2 files changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/ranger/__init__.py b/ranger/__init__.py
+index 1a9dad6..935c54b 100644
+--- a/ranger/__init__.py
++++ b/ranger/__init__.py
+@@ -23,7 +23,7 @@ TICKS_BEFORE_COLLECTING_GARBAGE = 100
+ TIME_BEFORE_FILE_BECOMES_GARBAGE = 1200
+ MAX_RESTORABLE_TABS = 3
+ MACRO_DELIMITER = '%'
+-DEFAULT_PAGER = 'less'
++DEFAULT_PAGER = 'sensible-pager'
+ LOGFILE = '/tmp/ranger_errorlog'
+ CACHEDIR = os.path.expanduser("~/.cache/ranger")
+ USAGE = '%prog [options] [path]'
+diff --git a/ranger/ext/rifle.py b/ranger/ext/rifle.py
+index 4f1ef1b..7f0d025 100755
+--- a/ranger/ext/rifle.py
++++ b/ranger/ext/rifle.py
+@@ -22,8 +22,8 @@ import sys
+ __version__ = 'rifle 1.7.1'
+ 
+ # Options and constants that a user might want to change:
+-DEFAULT_PAGER = 'less'
+-DEFAULT_EDITOR = 'vim'
++DEFAULT_PAGER = 'sensible-pager'
++DEFAULT_EDITOR = 'sensible-editor'
+ ASK_COMMAND = 'ask'
+ ENCODING = 'utf-8'
+ 

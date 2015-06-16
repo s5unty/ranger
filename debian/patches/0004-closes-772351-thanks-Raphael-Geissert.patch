@@ -1,0 +1,23 @@
+From: Vern Sun <s5unty@gmail.com>
+Date: Tue, 16 Jun 2015 11:00:50 +0800
+Subject: closes #772351, thanks Raphael Geissert
+
+
+https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=772351
+---
+ examples/rifle_sxiv.sh | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/examples/rifle_sxiv.sh b/examples/rifle_sxiv.sh
+index 8cb1390..0bdd892 100755
+--- a/examples/rifle_sxiv.sh
++++ b/examples/rifle_sxiv.sh
+@@ -24,7 +24,7 @@ if [ $# -eq 0 ]; then
+     exit
+ fi
+ 
+-[ "$1" == '--' ] && shift
++[ "$1" = '--' ] && shift
+ 
+ abspath () {
+     case "$1" in

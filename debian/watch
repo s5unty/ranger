@@ -1,0 +1,2 @@
+version=3
+https://github.com/hut/ranger/tags .*/archive/v(\d\S*)\.tar\.gz
