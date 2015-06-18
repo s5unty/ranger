@@ -1,6 +1,6 @@
 ranger (1.7.1-1) unstable; urgency=low
 
-  * New upstream release.
+  * New upstream release. (Closes: #778506, #784875)
   * Updated Standard-version to 3.9.6.
   * Add more upstream authors.
   * Bashism in rifle_sxiv.sh, fixed. (Closes: #772351)
