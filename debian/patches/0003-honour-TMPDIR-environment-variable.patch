@@ -1,6 +1,7 @@
 From: Vern Sun <s5unty@gmail.com>
 Date: Tue, 16 Jun 2015 10:51:54 +0800
 Subject: honour TMPDIR environment variable
+Forwarded: yes
 
 ---
  ranger/__init__.py  | 3 ++-
